@@ -2,8 +2,9 @@ const handler = require('serve-handler');
 const http = require('http');
 
 const server = http.createServer((request, response) => {
-  // You pass two more arguments for config and middleware
-  // More details here: https://github.com/vercel/serve-handler#options
+  // Set up cross origina isolation. This is required for shared array buffers to work.
+  // We use shared array buffers to share memory between redis threads.
+  // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cross-Origin-Opener-Policy#certain_features_depend_on_cross-origin_isolation
   return handler(request, response, {
     headers: [
       {
