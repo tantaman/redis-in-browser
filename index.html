@@ -1,0 +1,42 @@
+<html>
+  <head>
+  </head>
+  <body>
+    <script type="text/javascript">
+      const worker = new Worker('./redis-server.worker.js');
+      fetch('./redis-server.wasm').then(response =>
+        response.arrayBuffer()
+      ).then(bytes => 
+        WebAssembly.compile(bytes)
+      ).then(module => {
+        worker.postMessage({
+          data: {
+            cmd: 'load',
+          },
+          wasmModule: module,
+          wasmMemory: new WebAssembly.Memory({initial:10, maximum:100, shared: true}),
+          // define wasm memory and what not
+          // https://emscripten.org/docs/api_reference/module.html#creating-the-module-object
+          // eventually do networking:
+          // https://emscripten.org/docs/porting/networking.html
+        })
+      });
+      worker.onmessage = e => console.log(e)
+
+
+      // WebAssembly.instantiateStreaming(fetch('./redis-server.wasm'))
+      //   .then(obj => {
+      //     console.log(obj);
+      //     // // Call an exported function:
+      //     // obj.instance.exports.exported_func();
+
+      //     // // or access the buffer contents of an exported memory:
+      //     // var i32 = new Uint32Array(obj.instance.exports.memory.buffer);
+
+      //     // // or access the elements of an exported table:
+      //     // var table = obj.instance.exports.table;
+      //     // console.log(table.get(0)());
+      //   });
+    </script>
+  </body>
+</html>

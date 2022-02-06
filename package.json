@@ -1,0 +1,13 @@
+{
+  "name": "test-redis-in-browser",
+  "version": "1.0.0",
+  "description": "test",
+  "main": "index.html",
+  "repository": "na",
+  "author": "tantaman",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "serve-handler": "^6.1.3"
+  }
+}
