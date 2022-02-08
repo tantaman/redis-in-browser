@@ -1,28 +1,28 @@
 <html>
-  <head>
-  </head>
+  <head> </head>
   <body>
     <script type="text/javascript">
-      const worker = new Worker('./redis-server.worker.js');
-      fetch('./redis-server.wasm').then(response =>
-        response.arrayBuffer()
-      ).then(bytes => 
-        WebAssembly.compile(bytes)
-      ).then(module => {
-        worker.postMessage({
-          data: {
-            cmd: 'load',
-          },
-          wasmModule: module,
-          wasmMemory: new WebAssembly.Memory({initial:10, maximum:100, shared: true}),
-          // define wasm memory and what not
-          // https://emscripten.org/docs/api_reference/module.html#creating-the-module-object
-          // eventually do networking:
-          // https://emscripten.org/docs/porting/networking.html
-        })
-      });
-      worker.onmessage = e => console.log(e)
-
+      const worker = new Worker("./redis-server.worker.js");
+      fetch("./redis-server.wasm")
+        .then((response) => response.arrayBuffer())
+        .then((bytes) => WebAssembly.compile(bytes))
+        .then((module) => {
+          worker.postMessage({
+            cmd: "load",
+            wasmModule: module,
+            wasmMemory: new WebAssembly.Memory({
+              initial: 10,
+              maximum: 100,
+              shared: true,
+            }),
+            urlOrBlob: "./redis-runner.js",
+            // define wasm memory and what not
+            // https://emscripten.org/docs/api_reference/module.html#creating-the-module-object
+            // eventually do networking:
+            // https://emscripten.org/docs/porting/networking.html
+          });
+        });
+      worker.onmessage = (e) => console.log(e);
 
       // WebAssembly.instantiateStreaming(fetch('./redis-server.wasm'))
       //   .then(obj => {

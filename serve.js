@@ -1,12 +1,11 @@
-const handler = require('serve-handler');
-const https = require('https');
-const fs = require('fs');
+const handler = require("serve-handler");
+const https = require("https");
+const fs = require("fs");
 
 const options = {
-  key: fs.readFileSync('localhost-key.pem'),
-  cert: fs.readFileSync('localhost.pem')
+  key: fs.readFileSync("./localhost-key.pem"),
+  cert: fs.readFileSync("./localhost.pem"),
 };
-
 
 const server = https.createServer(options, (request, response) => {
   // Set up cross origina isolation. This is required for shared array buffers to work.
@@ -16,20 +15,23 @@ const server = https.createServer(options, (request, response) => {
     headers: [
       {
         source: "**/*",
-        headers: [{
-          key: "Cross-Origin-Opener-Policy",
-          value: "same-origin",
-        }, {
-          key: "Cross-Origin-Embedder-Policy",
-          value: "require-corp",
-        }]
-      }
-    ]
+        headers: [
+          {
+            key: "Cross-Origin-Opener-Policy",
+            value: "same-origin",
+          },
+          {
+            key: "Cross-Origin-Embedder-Policy",
+            value: "require-corp",
+          },
+        ],
+      },
+    ],
   });
-})
+});
 
-server.listen(8000, () => {
-  console.log('Running at https://localhost:3000');
+server.listen(3000, () => {
+  console.log("Running at https://localhost:3000");
 });
 
 // https://github.com/vercel/serve/pull/520
